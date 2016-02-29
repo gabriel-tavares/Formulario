@@ -62,22 +62,27 @@
 				</div>
 				<span id="alert" class="mens-alerta"></span>
 			</form>
-			<button onclick="farbe1()">Avançar</button>
+			<button onclick="fomulario()">Avançar</button>
 		</div>
 
 		<script type="text/javascript">
 		var click=0;
-		function farbe1(){
+		function fomulario(){
 
-			var element  = document.getElementById('ponto');
-			var element1 = document.getElementsByClassName('linha');
-			var element2 = document.querySelectorAll('div > div > span');
-			var element3 = document.querySelectorAll('form > div');
+			//Pega as tag´s do html
+            var hotspot  = document.getElementById('ponto');
+			var checkName = document.getElementsByClassName('linha');
+			var visibleName = document.querySelectorAll('div > div > span');
+			var boxInput = document.querySelectorAll('form > div');
 			var erro     = document.querySelectorAll('form > div > input');
+
+            //Armazena os dados do formulário
 			var name     = document.formSite.nome.value;
 			var email    = document.formSite.email.value;
 			var assunto  = document.formSite.assunto.value;
 			var mensagem = document.formSite.mensagem.value;
+
+
 			var re       = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
 			var reMail   = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
 			var error    = "";
@@ -88,69 +93,82 @@
 				});
 			};
 
-			if(click == 0){
-				erro[0].className = "";
-				if((name != "") && (name.length > 5) && (re.test(name) == true)){
-					element3[0].style.display = 'none';
-					element3[1].style.display = 'block';
-					element.style.webkitAnimationName = 'movimento-25';
-					element1[0].style.webkitAnimationName = 'linha-corte';
-					element2[1].style.webkitAnimationName = 'titulo-anim';
-					element3[1].style.webkitAnimationName = 'boxVisible';
-					click += 1;
-				} else if (name == "") {				
-					erro[0].className += "erro";
-					error = "<i class='fa fa-exclamation'></i> Campo vazio"
-				} else if (re.test(name) == false) {
-					erro[0].className += "erro";
-					error = "<i class='fa fa-exclamation'></i> Apenas letras"
-				} else {
-					erro[0].className += "erro";
-					error = "<i class='fa fa-exclamation'></i> Precisa ter mais de 5 caracteres"
+            // Função Animação
+            function animacao() {
+                boxInput[click].style.display = 'none';
+                hotspot.style.webkitAnimationName = 'movimento-' + click.toString();
+                checkName[click].style.webkitAnimationName = 'linha-corte';
+                visibleName[click + 1].style.webkitAnimationName = 'titulo-anim';
+                boxInput[click + 1].style.cssText = 'display:block; animation-name:boxVisible;';
+            };
+
+            //Função validação
+            function validacao(stringFormulario){
+                var regexString = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
+                var regexEmail = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
+                var valida = false; 
+                
+                if (click === 0) {
+                    if((stringFormulario !== "") && (stringFormulario.length > 5) && (re.test(stringFormulario) === true)){
+                        valida = true;
+                    } else if (stringFormulario === "") {               
+                        erro[0].className += "erro";
+                        error = "<i class='fa fa-exclamation'></i> Campo vazio";
+                    } else if (re.test(stringFormulario) === false) {
+                        erro[0].className += "erro";
+                        error = "<i class='fa fa-exclamation'></i> Apenas letras";
+                    } else {
+                        erro[0].className += "erro";
+                        error = "<i class='fa fa-exclamation'></i> Precisa ter mais de 5 caracteres";
+                    };
+                } else if (click === 1) {
+                    if((stringFormulario !== "") && (reMail.test(stringFormulario) === true)){
+                        valida = true;
+                    } else if (stringFormulario === "") {
+                        error = "<i class='fa fa-exclamation'></i> Campo vazio";
+                    } else {
+                        error = "<i class='fa fa-exclamation'></i> E-mail inválido";                    
+                    };
+                } else if (click === 2) {
+                    if(stringFormulario !== ""){
+                        valida = true;
+                    } else {
+                        error = "<i class='fa fa-exclamation'></i> Campo vazio";
+                    };
+                } else {
+                    if(stringFormulario !== ""){
+                        valida = true;
+                    } else {
+                        error = "<i class='fa fa-exclamation'></i> Campo vazio";
+                    };
+                };
+
+                return valida;
+            };
+
+            erro[0].className = "";
+
+			if(click === 0){
+				if(validacao(name) === true){
+					animacao();
+                    click++;
 				};
+			}else if(click === 1){
+                if(validacao(email) === true){
+                    animacao();
+                    click++;
+                };
 
-			}else if(click == 1){
-
-				if((email != "") && (reMail.test(email) == true)){
-					element3[1].style.display = 'none';
-					element3[2].style.display = 'block';
-					element.style.webkitAnimationName = 'movimento-50';
-					element1[1].style.webkitAnimationName = 'linha-corte';
-					element2[2].style.webkitAnimationName = 'titulo-anim';
-					element3[2].style.webkitAnimationName = 'boxVisible';
-					click += 1;
-				} else if (email == "") {
-					error = "<i class='fa fa-exclamation'></i> Campo vazio"
-				} else {
-					error = "<i class='fa fa-exclamation'></i> E-mail inválido"
-				};
-
-			}else if(click == 2){
-
-				if(assunto != "") {
-					element3[2].style.display = 'none';
-					element3[3].style.display = 'block';
-					element.style.webkitAnimationName = 'movimento-75';
-					element1[2].style.webkitAnimationName = 'linha-corte';
-					element2[3].style.webkitAnimationName = 'titulo-anim';
-					element3[3].style.webkitAnimationName = 'boxVisible';
-					click += 1;
-				} else {
-					error = "<i class='fa fa-exclamation'></i> Campo vazio"
-				};		
-
+			}else if(click === 2){
+                if(validacao(assunto) === true){
+                    animacao();
+                    click++;
+                };
 			}else {
-
-				if(mensagem != "") {
-					element3[3].style.display = 'none';
-					element.style.webkitAnimationName = 'movimento-100';
-					element1[3].style.webkitAnimationName = 'linha-corte';
-					element2[4].style.webkitAnimationName = 'titulo-anim';
-					element3[4].style.webkitAnimationName = 'boxVisible';
-				} else {
-					error = "<i class='fa fa-exclamation'></i> Campo vazio"
-				};
-
+                if(validacao(mensagem) === true){
+                    animacao();
+                    click++;
+                };
 			};
 
 			document.getElementById('alert').innerHTML = error;
